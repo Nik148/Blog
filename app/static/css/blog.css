@@ -1,0 +1,65 @@
+body{
+    margin: 0px;
+    font-family: 'Ubuntu', sans-serif;
+}
+header{
+    display: flex;
+    justify-content: center;
+    font-size: 35px;
+    background-color: #0f0e17;
+    color: white;
+    padding: 15px 0px;
+}
+section{
+    padding-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.add_bt{
+    padding: 6px 35px;
+    border: none;
+    background-color: #198754;
+    margin-bottom: 10px;
+    color: white;
+    border-radius: 10px;
+    font-size: 17px;
+    cursor: pointer;
+}
+.card{
+    width: 250px;
+    box-sizing: border-box;
+    border: black 2px solid;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+.card_info{
+    padding: 0px 15px;
+}
+.card_title{
+    border-bottom: black 2px solid;
+}
+.card_text{
+    margin-bottom: 10px;
+}
+.card_like_bt{
+    box-shadow: none;
+    background: none;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 15px;
+    font-family: 'Ubuntu', sans-serif;
+    border-radius: 10px;
+    margin-bottom: 8px;
+
+}
+.card_like_count{
+    display: inline-block;
+}
+.card_author{
+    margin-bottom: 8px;
+}
+.card_date{
+    margin-bottom: 8px;
+
+}

@@ -1,0 +1,31 @@
+version: '3.3'
+services:
+    app:
+      build: ./
+      container_name: app
+      command: bash -c ". venv/bin/activate
+              && alembic upgrade head
+              && python main.py"
+      restart: always
+      ports:
+        - 8000:8000
+      environment:
+        - DB_URL=postgresql+asyncpg://postgres:admin@db:5432/blog
+        - TEST_DB_URL=postgresql+asyncpg://postgres:admin@db:5432/test_blog
+        - TEST_DB_NAME=test_blog
+      restart: always
+      depends_on:
+        - db
+
+    db:
+      user: root
+      image: postgres:15
+      restart: always
+      volumes:
+        - ./pg_db:/var/lib/postgresql/data/
+      environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=admin
+        - POSTGRES_DB=blog
+      ports:
+        - 5433:5432

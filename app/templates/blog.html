@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static', path='/css/blog.css') }}" rel="stylesheet">
+    <title>Blog</title>
+</head>
+<body>
+    <header>
+        Blog
+    </header>
+    <section>
+        <a class="add_bt" href="{{url_for('add_post')}}">Add post</a>
+        {% for post in posts%}
+        <div class="card">
+            <div class="card_info">
+                <h3 class="card_title">{{post.title}}</h3>
+                <div class="card_text">{{post.text}}</div>
+                <div class="card_author">author: {{post.author.login}}</div>
+                <div class="card_date">date: {{post.date.strftime("%Y-%m-%d %H:%M")}}</div>
+                <button class="card_like_bt" onclick="like('{{post.id}}')">likes:
+                    <div id="{{post.id}}" class="card_like_count" isLike={{post.isLiked}}>{{post.likes}}</div>
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </section>
+</body>
+<script>
+    function like(post_id)
+    {
+        let element = document.getElementById(post_id)
+        let nubmers = element.textContent
+        if (String(element.getAttribute('isLike'))=='False')
+        {
+            element.innerHTML = Number(nubmers) + 1;
+            element.setAttribute('isLike', 'True')
+
+            fetch("/like_increment", {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json',
+                          'accept': 'application/json',
+                          'Authorization': "Bearer "+'{{access_token}}'
+                        },
+                body: JSON.stringify({
+                    'user_id': '{{user_id}}',
+                    'post_id': post_id
+                    })
+                })
+        }
+        else
+        {
+            element.innerHTML = Number(nubmers) - 1;
+            element.setAttribute('isLike', 'False')
+            fetch("/like_decrement", {
+                method: 'DELETE',
+                headers: {'Content-Type': 'application/json',
+                          'accept': 'application/json',
+                          'Authorization': "Bearer "+'{{access_token}}'
+                        },
+                body: JSON.stringify({
+                    'user_id': '{{user_id}}',
+                    'post_id': post_id
+                    })
+                });
+        }
+    }
+</script>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static', path='/css/auth.css') }}" rel="stylesheet">
+    <title>Blog - Add post</title>
+</head>
+<body>
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu:500' rel='stylesheet' type='text/css'>
+
+    <div class="login">
+      <div class="login-header">
+        <h1>Add post</h1>
+      </div>
+      <div id="login-form" class="login-form">
+        <h3>Title:</h3>
+        <input id="title" type="text" placeholder="Title"/><br>
+        <h3>Text:</h3>
+        <input id="text" type="text" placeholder="Text"/>
+        <br>
+        <input type="button" onclick="send()" value="Add post" class="login-button"/>
+        <br>
+        <a class="sign-up" href="{{ url_for('blog') }}">Back to blog</a>
+        <br>
+      </div>
+    </div>
+</body>
+<script>
+
+
+
+    function info_message(message_text)
+  {
+      let contacts = document.getElementById("login-form")
+      let message = document.createElement("p")
+      message.className = "message_error"
+      message.id = "message_status"
+      message.innerHTML = message_text
+      contacts.appendChild(message)
+  }
+  async function send()
+  {
+    let old_message = document.getElementById("message_status")
+        if (old_message){
+            old_message.remove()
+        }
+
+    let title = document.getElementById("title").value
+    let text = document.getElementById("text").value
+    let response = await fetch("/post", {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json',
+                          'accept': 'application/json',
+                          'Authorization': "Bearer "+'{{access_token}}'},
+                body: JSON.stringify({
+                    'title': title,
+                    'text': text
+                    })
+                })
+    if (response.status == 201)
+    {
+      document.location.href = "/blog";
+    }
+    json = await response.json()
+    console.log(json)
+    info_message(json.message)
+  }
+</script>
+</html>
