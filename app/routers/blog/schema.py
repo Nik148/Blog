@@ -16,4 +16,3 @@ class BlogSchema(BaseModel):
         # print(v.author)
         v.author_name = v.author.login
         return v
-    

@@ -17,14 +17,16 @@ def signJWT(user_id: str) -> Dict[str, str]:
         "user_id": user_id,
         "expires": time.time() + 1800
     }
-    token = jwt.encode(payload, Config.SECRET_KEY, algorithm=Config.JWT_ALGORITHM)
+    token = jwt.encode(payload, Config.SECRET_KEY,
+                       algorithm=Config.JWT_ALGORITHM)
 
     return token_response(token)
 
 
 def decodeJWT(token: str) -> dict:
     try:
-        decoded_token = jwt.decode(token, Config.SECRET_KEY, algorithms=[Config.JWT_ALGORITHM])
+        decoded_token = jwt.decode(token, Config.SECRET_KEY, algorithms=[
+                                   Config.JWT_ALGORITHM])
         return decoded_token if decoded_token["expires"] >= time.time() else None
     except:
         return None
@@ -32,7 +34,7 @@ def decodeJWT(token: str) -> dict:
 
 class JWTBearer(HTTPBearer):
     def __init__(self, auto_error: bool = True, check_cookie=None):
-        self.check_cookie=check_cookie
+        self.check_cookie = check_cookie
         super(JWTBearer, self).__init__(auto_error=auto_error)
 
     async def __call__(self, request: Request):
@@ -40,18 +42,22 @@ class JWTBearer(HTTPBearer):
             if request.cookies.get("access_token"):
                 payload = decodeJWT(request.cookies.get("access_token"))
                 if not payload:
-                    raise HTTPException(status_code=403, detail="Invalid token or expired token.")
+                    raise HTTPException(
+                        status_code=401, detail="Invalid token or expired token.")
                 return payload
             else:
-                raise HTTPException(status_code=403, detail="Invalid cookies")
-            
+                raise HTTPException(status_code=401, detail="Invalid cookies")
+
         credentials: HTTPAuthorizationCredentials = await super(JWTBearer, self).__call__(request)
         if credentials:
             if not credentials.scheme == "Bearer":
-                raise HTTPException(status_code=403, detail="Invalid authentication scheme.")
+                raise HTTPException(
+                    status_code=403, detail="Invalid authentication scheme.")
             payload = decodeJWT(credentials.credentials)
             if not payload:
-                raise HTTPException(status_code=403, detail="Invalid token or expired token.")
+                raise HTTPException(
+                    status_code=403, detail="Invalid token or expired token.")
             return payload
         else:
-            raise HTTPException(status_code=403, detail="Invalid authorization code.")
+            raise HTTPException(
+                status_code=403, detail="Invalid authorization code.")

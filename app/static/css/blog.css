@@ -10,6 +10,13 @@ header{
     color: white;
     padding: 15px 0px;
 }
+.logout{
+    position: absolute;
+    right: 30px;
+    font-size: 21px;
+    top: 25px;
+    color: white;
+}
 section{
     padding-top: 15px;
     display: flex;

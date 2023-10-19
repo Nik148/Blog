@@ -12,6 +12,7 @@ from app.database.model import User
 
 router = APIRouter(prefix="", tags=["Auth"])
 
+
 @router.post("/registration", status_code=201)
 async def registration(data: UserRegisterSchema, session: AsyncSession = Depends(get_session)):
     user = User(**data.dict())
@@ -20,12 +21,13 @@ async def registration(data: UserRegisterSchema, session: AsyncSession = Depends
         await session.commit()
         return {"message": "Success"}
     except IntegrityError:
-        return JSONResponse(status_code=400, content={"message": "login is busy"}) 
+        return JSONResponse(status_code=400, content={"message": "login is busy"})
+
 
 @router.post("/login")
 async def login(data: UserLoginSchema, session: AsyncSession = Depends(get_session)):
-    user = await session.execute(select(User).where(User.login==data.login))
-    user: User = user.scalar() 
+    user = await session.execute(select(User).where(User.login == data.login))
+    user: User = user.scalar()
     if user and password_context.verify(data.password, user.password):
         return signJWT(user.id)
-    return JSONResponse(status_code=400, content={"message": "Not login"}) 
+    return JSONResponse(status_code=400, content={"message": "Not login"})
