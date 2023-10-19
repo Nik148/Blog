@@ -60,10 +60,9 @@ async def delete_post(
     post: Post = post.scalar()
     if not post:
         return JSONResponse(status_code=404, content={"message":"Post not find"})
+    await session.execute(likes.delete().where(likes.c.post_id==post_id))
     await session.delete(post)
     await session.commit()
-    # if not post:
-    #     return JSONResponse(status_code=404, content={"message":"Post not find"})
     return JSONResponse(status_code=200, content={"message":"Post deleted"})
 
 @router.post('/like_increment')
