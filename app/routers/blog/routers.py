@@ -58,8 +58,9 @@ async def blog_register(request: Request):
 
 @router.get("/blog/logout")
 async def blog_logout(request: Request, response: Response):
+    response = RedirectResponse("/blog/login")
     response.delete_cookie(key="access_token")
-    return RedirectResponse("/blog/login")
+    return response
 
 
 @router.get("/blog/add_post", response_model=List[BlogSchema])
