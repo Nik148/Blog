@@ -8,3 +8,7 @@
 docker-compose build
 docker-compose up
 ```
+## Тестирование
+```
+pytest test
+```
